@@ -19,9 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="FillCircle.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="11.25\MainInclude.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

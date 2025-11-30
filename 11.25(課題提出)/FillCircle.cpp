@@ -49,12 +49,8 @@ void CircleDraw(Circle* circle) {
 		DrawString(circle->pos.x - 150, circle->pos.y + circle->radius + 50, "“h‚è‚Â‚Ô‚µ‚È‚µ", WHITE);
 	DrawCircle(circle->pos.x, circle->pos.y, circle->radius, RED, FALSE);
 
-	if (CheckHitKey(KEY_INPUT_SPACE)) {
-		space++;
-	}
-	else {
-		space > 0 ? space = -1 : space = 0;
-	}
+	CheckHitKey(KEY_INPUT_SPACE) ? space++ :
+	space > 0 ? space = -1 : space = 0;
 
 	if (space == 1) {
 		fill ? fill = false : fill = true;

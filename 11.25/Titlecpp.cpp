@@ -3,7 +3,7 @@
 #include	"MainInclude.h"
 
 static void TitleScene(int time,int& scene,const int bgm[]);
-static void ResultScene(Massage* massage,const int bgm[]);
+static void ResultScene(int& scene,Massage* massage,const int bgm[]);
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
 	SetWindowText("リズムゲーム");
@@ -36,7 +36,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		case GAME:
 			score = Game(scene,time(NULL)); break;
 		case RESULT:
-			ResultScene(score,bgm); break;
+			ResultScene(scene,score,bgm); break;
 		}
 
 		ScreenFlip();
@@ -70,7 +70,7 @@ static void TitleScene(int time,int& scene,const int bgm[]) {
 	}
 }
 
-static void ResultScene(Massage* massage,const int bgm[]) {
+static void ResultScene(int& scene,Massage* massage,const int bgm[]) {
 	static bool play = true;
 
 	if (play) {
@@ -83,5 +83,10 @@ static void ResultScene(Massage* massage,const int bgm[]) {
 	DrawString(WIDTH / 2 - 110, 100, "結果", RED);
 	SetFontSize(50);
 	DrawFormatString(230, HEIGHT - 200, WHITE, "Perfect:%d Good:%d Bad:%d", massage->perfect, massage->good, massage->bad);
-	DrawString(360, HEIGHT - 100, "ESCキーで終了", WHITE);
+	DrawString(180, HEIGHT - 100, "ESCキーで終了 : Rでリトライ", WHITE);
+	if (CheckHitKey(KEY_INPUT_R)) {
+		play = true;
+		StopSoundMem(bgm[1]);
+		scene = GAME;
+	}
 }

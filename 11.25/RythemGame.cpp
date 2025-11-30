@@ -36,6 +36,7 @@ static int Comparison(int totalDistance,int totalRadius);
 static void Draw(int size,double elapsedTime,const Massage* massage,const Box* box,Circle* judgeCircle,Circle* musicalScore);
 static JudgeMassage Judge(double distance, double radius,Massage* massage);
 static void Display(int se[], const Circle* judgeCircle, JudgeMassage* judge);
+static void Reset(int& count, int& space, bool& play,int size, Circle* musicalScore);
 
 Massage* Game(int& scene,time_t nowtime) {
 	static int se[] = {
@@ -48,8 +49,13 @@ Massage* Game(int& scene,time_t nowtime) {
 	ChangeVolumeSoundMem(150, bgm);
 
 	static bool play = true;
+	static bool reset = false;
 
 	static time_t fixedTime = time(NULL);
+	if (reset) {
+		fixedTime = time(NULL); //リトライしたときにリセット
+	}
+
 	double elapsedTime = (double)(nowtime - fixedTime);
 
 	static bool suffer = true;
@@ -57,6 +63,12 @@ Massage* Game(int& scene,time_t nowtime) {
 	static int count = 0;
 	static int space = 0;
 	static Massage judgemassage = { 0,0,0 };
+	if (reset) {
+		judgemassage.perfect = 0;
+		judgemassage.good = 0;
+		judgemassage.bad = 0;
+		reset = false;
+	}
 
 	static Box box = { 10,HEIGHT - 100,WIDTH / 2 - 50,HEIGHT - 10,WHITE };
 
@@ -140,7 +152,9 @@ Massage* Game(int& scene,time_t nowtime) {
 	}
 
 	if (count == MAX) {
+		reset = true;
 		StopSoundMem(bgm);
+		Reset(count, space, play,size, musicalScore);
 		scene = RESULT;
 		return &judgemassage;
 	}
@@ -205,3 +219,15 @@ static void Display(int se[], const Circle* judgeCircle, JudgeMassage* judge) {
 	PlaySoundMem(se[*judge], DX_PLAYTYPE_BACK);
 }
 
+static void Reset(int& count, int& space, bool& play,int size, Circle* musicalScore) {
+	count = 0;
+	space = 0;
+	play = true;
+
+	for (int i = 0; i < size; i++) {
+		musicalScore[i].pos.x = WIDTH + 50;
+		musicalScore[i].pos.y = HEIGHT / 2;
+		musicalScore[i].radius = 50;
+		musicalScore[i].DestroyFlag = true;
+	}
+}

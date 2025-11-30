@@ -82,6 +82,6 @@ static void ResultScene(Massage* massage,const int bgm[]) {
 	SetFontSize(100);
 	DrawString(WIDTH / 2 - 110, 100, "結果", RED);
 	SetFontSize(50);
-	DrawFormatString(220, HEIGHT - 200, WHITE, "Perfect:%d Good:%d Bad:%d", massage->perfect, massage->good, massage->bad);
-	DrawString(350, HEIGHT - 100, "ESCキーで終了", WHITE);
+	DrawFormatString(230, HEIGHT - 200, WHITE, "Perfect:%d Good:%d Bad:%d", massage->perfect, massage->good, massage->bad);
+	DrawString(360, HEIGHT - 100, "ESCキーで終了", WHITE);
 }

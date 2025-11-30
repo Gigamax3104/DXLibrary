@@ -18,6 +18,7 @@ struct Circle {
 	Vector2 pos;
 	int radius;
 	int color;
+	bool DestroyFlag;
 };
 
 struct Box {
@@ -32,7 +33,7 @@ const char* massage[] = {
 };
 
 static int Comparison(int totalDistance,int totalRadius);
-static void Draw(int& index,int size,double elapsedTime,const Massage* massage,const Box* box,Circle* judgeCircle,Circle* musicalScore);
+static void Draw(int size,double elapsedTime,const Massage* massage,const Box* box,Circle* judgeCircle,Circle* musicalScore);
 static JudgeMassage Judge(double distance, double radius,Massage* massage);
 static void Display(int se[], const Circle* judgeCircle, JudgeMassage* judge);
 
@@ -53,35 +54,35 @@ Massage* Game(int& scene,time_t nowtime) {
 
 	static bool suffer = true;
 
+	static int count = 0;
 	static int space = 0;
-	static int index = 0;
-	static Massage massage = { 0,0,0 };
+	static Massage judgemassage = { 0,0,0 };
 
 	static Box box = { 10,HEIGHT - 100,WIDTH / 2 - 50,HEIGHT - 10,WHITE };
 
 	static Circle judgeCircle = { WIDTH / 2,HEIGHT / 2,50,WHITE};
 
 	static Circle musicalScore[MAX] = {
-		WIDTH + 50,HEIGHT / 2,50,RED,
-		WIDTH + 50,HEIGHT / 2,50,RED,
-		WIDTH + 50,HEIGHT / 2,50,RED,
-		WIDTH + 50,HEIGHT / 2,50,RED,
-		WIDTH + 50,HEIGHT / 2,50,RED,
-		WIDTH + 50,HEIGHT / 2,50,RED,
-		WIDTH + 50,HEIGHT / 2,50,RED,
-		WIDTH + 50,HEIGHT / 2,50,RED,
-		WIDTH + 50,HEIGHT / 2,50,RED,
-		WIDTH + 50,HEIGHT / 2,50,RED,
-		WIDTH + 50,HEIGHT / 2,50,RED,
-		WIDTH + 50,HEIGHT / 2,50,RED,
-		WIDTH + 50,HEIGHT / 2,50,RED,
-		WIDTH + 50,HEIGHT / 2,50,RED,
-		WIDTH + 50,HEIGHT / 2,50,RED,
-		WIDTH + 50,HEIGHT / 2,50,RED,
-		WIDTH + 50,HEIGHT / 2,50,RED,
-		WIDTH + 50,HEIGHT / 2,50,RED,
-		WIDTH + 50,HEIGHT / 2,50,RED,
-		WIDTH + 50,HEIGHT / 2,50,RED
+		WIDTH + 50,HEIGHT / 2,50,RED,true,
+		WIDTH + 50,HEIGHT / 2,50,RED,true,
+		WIDTH + 50,HEIGHT / 2,50,RED,true,
+		WIDTH + 50,HEIGHT / 2,50,RED,true,
+		WIDTH + 50,HEIGHT / 2,50,RED,true,
+		WIDTH + 50,HEIGHT / 2,50,RED,true,
+		WIDTH + 50,HEIGHT / 2,50,RED,true,
+		WIDTH + 50,HEIGHT / 2,50,RED,true,
+		WIDTH + 50,HEIGHT / 2,50,RED,true,
+		WIDTH + 50,HEIGHT / 2,50,RED,true,
+		WIDTH + 50,HEIGHT / 2,50,RED,true,
+		WIDTH + 50,HEIGHT / 2,50,RED,true,
+		WIDTH + 50,HEIGHT / 2,50,RED,true,
+		WIDTH + 50,HEIGHT / 2,50,RED,true,
+		WIDTH + 50,HEIGHT / 2,50,RED,true,
+		WIDTH + 50,HEIGHT / 2,50,RED,true,
+		WIDTH + 50,HEIGHT / 2,50,RED,true,
+		WIDTH + 50,HEIGHT / 2,50,RED,true,
+		WIDTH + 50,HEIGHT / 2,50,RED,true,
+		WIDTH + 50,HEIGHT / 2,50,RED,true
 	};
 
 	int size = sizeof musicalScore / sizeof musicalScore[0];
@@ -103,7 +104,7 @@ Massage* Game(int& scene,time_t nowtime) {
 
 	DrawFormatString(0, 0, WHITE, "%dfps", FPS);
 
-	Draw(index,size,elapsedTime,&massage,&box, &judgeCircle, musicalScore);
+	Draw(size,elapsedTime,&judgemassage,&box, &judgeCircle, musicalScore);
 
 	if (CheckHitKey(KEY_INPUT_SPACE) == 1) {
 		space++;
@@ -116,25 +117,32 @@ Massage* Game(int& scene,time_t nowtime) {
 		DrawCircle(judgeCircle.pos.x, judgeCircle.pos.y, judgeCircle.radius, RED, TRUE);
 	}
 
-	for (int i = index; i < size2; i++) {
-		if (space == 1 && Comparison(d[i], judgeCircle.radius + musicalScore[i].radius)) {
-			if (suffer) {
-				JudgeMassage judge = Judge(d[i], judgeCircle.radius + musicalScore[i].radius, &massage);
-				Display(se,&judgeCircle, &judge);
-				index++;
-				suffer = false;
+	for (int i = 0; i < size2; i++) {
+		if (musicalScore[i].DestroyFlag) {
+			if (space == 1 && Comparison(d[i], judgeCircle.radius + musicalScore[i].radius)) {
+				if (suffer) {
+					JudgeMassage judge = Judge(d[i], judgeCircle.radius + musicalScore[i].radius, &judgemassage);
+					Display(se, &judgeCircle, &judge);
+					suffer = false;
+					musicalScore[i].DestroyFlag = false;
+					count++;
+				}
 			}
-		}
-	
-		if (musicalScore[i].pos.x <= -50) {
-			index++;
+
+			if (musicalScore[i].pos.x <= -50) {
+				JudgeMassage judge = Bad;
+				judgemassage.bad++;
+				Display(se, &judgeCircle, &judge);
+				musicalScore[i].DestroyFlag = false;
+				count++;
+			}
 		}
 	}
 
-	if (index == MAX) {
+	if (count == MAX) {
 		StopSoundMem(bgm);
 		scene = RESULT;
-		return &massage;
+		return &judgemassage;
 	}
 
 	suffer = true;
@@ -145,7 +153,7 @@ static int Comparison(int totalDistance, int totalRadius) {
 		totalDistance <= totalRadius ? 1 : 0;
 }
 
-static void Draw(int& index,int size,double elapsedTime,const Massage* massage, const Box* box, Circle* judgeCircle, Circle* musicalScore) {
+static void Draw(int size,double elapsedTime,const Massage* massage, const Box* box, Circle* judgeCircle, Circle* musicalScore) {
 
 	DrawBox(box->pos[0].x, box->pos[0].y, box->pos[1].x, box->pos[1].y, box->color, TRUE);
 
@@ -155,8 +163,8 @@ static void Draw(int& index,int size,double elapsedTime,const Massage* massage, 
 
 	DrawCircle(judgeCircle->pos.x, judgeCircle->pos.y, judgeCircle->radius, judgeCircle->color, TRUE);
 
-	for (int i = index; i < size; i++) {
-		if (elapsedTime >= (i + 1) * 2.17 * 60 / BPM) {
+	for (int i = 0; i < size; i++) {
+		if (elapsedTime >= (i + 1) * 2.17 * 60 / BPM && musicalScore[i].DestroyFlag) {
 			musicalScore[i].pos.x -= SPEED;
 			DrawCircle(musicalScore[i].pos.x, musicalScore[i].pos.y,
 					   musicalScore[i].radius, musicalScore[i].color, TRUE);

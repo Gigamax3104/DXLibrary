@@ -2,6 +2,7 @@
 #define WAITTIMER 33
 #define FPS 1000 / WAITTIMER
 #define BPM 130
+#define SPEED 10
 #define MAX 20
 #define WIDTH 1080
 #define HEIGHT 640

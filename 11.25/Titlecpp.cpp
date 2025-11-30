@@ -57,5 +57,6 @@ static void ResultScene(Massage* massage) {
 	SetFontSize(100);
 	DrawString(WIDTH / 2 - 110, 100, "åãâ ", RED);
 	SetFontSize(50);
-	DrawFormatString(220, HEIGHT - 100, WHITE, "Perfect:%d Good:%d Bad:%d", massage->perfect, massage->good, massage->bad);
+	DrawFormatString(220, HEIGHT - 200, WHITE, "Perfect:%d Good:%d Bad:%d", massage->perfect, massage->good, massage->bad);
+	DrawString(350, HEIGHT - 100, "ESCÉLÅ[Ç≈èIóπ", WHITE);
 }

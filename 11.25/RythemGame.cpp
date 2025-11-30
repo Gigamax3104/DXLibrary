@@ -90,13 +90,13 @@ Massage* Game(int& scene,time_t nowtime) {
 	int size2 = sizeof d / sizeof d[0];
 
 	for (int i = 0; i < size2; i++) {
-		d[i] = pow(judgeCircle.pos.x - musicalScore[i].pos.x, 2)
-			 + pow(judgeCircle.pos.y - musicalScore[i].pos.y, 2);
+		d[i] = sqrt(pow(judgeCircle.pos.x - musicalScore[i].pos.x, 2)
+			 + pow(judgeCircle.pos.y - musicalScore[i].pos.y, 2));
 	}
 
 	ClearDrawScreen();
 
-	if (play) {
+	if (play && elapsedTime >= sqrt(pow(judgeCircle.pos.x - musicalScore->pos.x, 2)) / (SPEED * FPS)) {		
 		PlaySoundMem(bgm, DX_PLAYTYPE_LOOP);
 		play = false;
 	}
@@ -117,9 +117,9 @@ Massage* Game(int& scene,time_t nowtime) {
 	}
 
 	for (int i = index; i < size2; i++) {
-		if (space == 1 && Comparison(d[i], pow(judgeCircle.radius + musicalScore[i].radius, 2))) {
+		if (space == 1 && Comparison(d[i], judgeCircle.radius + musicalScore[i].radius)) {
 			if (suffer) {
-				JudgeMassage judge = Judge(d[i], pow(judgeCircle.radius + musicalScore[i].radius, 2), &massage);
+				JudgeMassage judge = Judge(d[i], judgeCircle.radius + musicalScore[i].radius, &massage);
 				Display(se,&judgeCircle, &judge);
 				index++;
 				suffer = false;
@@ -146,7 +146,6 @@ static int Comparison(int totalDistance, int totalRadius) {
 }
 
 static void Draw(int& index,int size,double elapsedTime,const Massage* massage, const Box* box, Circle* judgeCircle, Circle* musicalScore) {
-	static int speed = 10;
 
 	DrawBox(box->pos[0].x, box->pos[0].y, box->pos[1].x, box->pos[1].y, box->color, TRUE);
 
@@ -157,8 +156,8 @@ static void Draw(int& index,int size,double elapsedTime,const Massage* massage, 
 	DrawCircle(judgeCircle->pos.x, judgeCircle->pos.y, judgeCircle->radius, judgeCircle->color, TRUE);
 
 	for (int i = index; i < size; i++) {
-		if (elapsedTime >= (i + 10) * 2.17 * 60 / BPM) {
-			musicalScore[i].pos.x -= speed;
+		if (elapsedTime >= (i + 1) * 2.17 * 60 / BPM) {
+			musicalScore[i].pos.x -= SPEED;
 			DrawCircle(musicalScore[i].pos.x, musicalScore[i].pos.y,
 					   musicalScore[i].radius, musicalScore[i].color, TRUE);
 		}
@@ -167,11 +166,11 @@ static void Draw(int& index,int size,double elapsedTime,const Massage* massage, 
 
 static JudgeMassage Judge(double distance, double radius,Massage* massage) {
 	
-	if (radius - distance < radius * 0.5) {
+	if (radius - distance < radius * 0.3) {
 		massage->bad++;
 		return Bad;
 	}
-	else if (radius - distance < radius * 0.95) {
+	else if (radius - distance < radius * 0.8) {
 		massage->good++;
 		return Good;
 	}

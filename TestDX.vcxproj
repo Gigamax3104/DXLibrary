@@ -21,6 +21,10 @@
   <ItemGroup>
     <ClInclude Include="11.25\MainInclude.h" />
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="11.25\RythemGame.cpp" />
+    <ClCompile Include="11.25\Titlecpp.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>

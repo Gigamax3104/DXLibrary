@@ -19,10 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="11.25\MainInclude.h" />
+    <ClCompile Include="11.25(課題提出)\RythemGame.cpp" />
+    <ClCompile Include="11.25(課題提出)\Titlecpp.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="11.25(課題提出)\FillCircle.cpp" />
+    <ClInclude Include="11.25(課題提出)\MainInclude.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

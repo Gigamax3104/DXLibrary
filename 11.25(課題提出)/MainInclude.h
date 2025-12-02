@@ -6,7 +6,7 @@
 #define MAX 20
 #define WIDTH 1080
 #define HEIGHT 640
-//#include	<DxLib.h>
+#include	<DxLib.h>
 
 const int WHITE = 0xffffff;
 const int RED = 0xff0000;
@@ -31,4 +31,4 @@ struct Vector2 {
 	double y;
 };
 
-//Massage* Game(int& scene,time_t time);
+Massage* Game(int& scene,time_t time);

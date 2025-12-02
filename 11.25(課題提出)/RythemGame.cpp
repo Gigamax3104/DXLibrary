@@ -26,7 +26,7 @@ const char* massage[] = {
 	"Bad..."
 };
 
-static int Comparison(int totalDistance,int totalRadius);
+static bool Comparison(int totalDistance,int totalRadius);
 static void Draw(/*int size,*/double elapsedTime,const Massage* massage,const Box* box,const Circle* judgeCircle,Circle* musicalScore);
 static JudgeMassage Judge(double distance, double radius,Massage* massage);
 static void Display(int se[], const Circle* judgeCircle, JudgeMassage* judge);
@@ -149,9 +149,9 @@ Massage* Game(int& scene,time_t nowtime) {
 	}
 }
 
-static int Comparison(int totalDistance, int totalRadius) {
+static bool Comparison(int totalDistance, int totalRadius) {
 	return
-		totalDistance <= totalRadius ? 1 : 0;
+		totalDistance <= totalRadius ? true : false;
 }
 
 static void Draw(/*int size,*/double elapsedTime,const Massage* massage, const Box* box, const Circle* judgeCircle, Circle* musicalScore) {

@@ -138,7 +138,7 @@ Massage* Game(int& scene,time_t nowtime) {
 	//	}
 	//}
 
-	if (count == MAX) {
+	if (count == /*MAX*/1) {
 		reset = true;
 		//StopSoundMem(bgm);
 		Reset(count, space, play,/*size,*/ &musicalScore);

@@ -2,17 +2,12 @@
 #include	<math.h>
 #include	<stdlib.h>
 
-struct Vector2 {
-	int x;
-	int y;
-};
-
 struct Circle {
 	Vector2 pos;
 	int radius;
 };
 
-int hitCircleCircle(Circle* circle);
+bool hitCircleCircle(const Circle* circle);
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
 	SetWindowText("‰æ–Ê‘JˆÚ");
@@ -37,10 +32,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 }
 
-int hitCircleCircle(Circle* circle) {
-	int d = sqrt((circle[0].pos.x - circle[1].pos.x) * (circle[0].pos.x - circle[1].pos.x)
+bool hitCircleCircle(const Circle* circle) {
+	double d = sqrt((circle[0].pos.x - circle[1].pos.x) * (circle[0].pos.x - circle[1].pos.x)
 		+ (circle[0].pos.y - circle[1].pos.y) * (circle[0].pos.y - circle[1].pos.y));
 
 	return
-		d <= circle[0].radius + circle[1].radius ? 1 : 0;
+		d <= circle[0].radius + circle[1].radius ? true : false;
 }

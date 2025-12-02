@@ -1,22 +1,16 @@
 #include	"MainInclude.h"
 #include	<math.h>
 #include	<time.h>
-#define BLUE 0x0000ff
 
 enum JudgeMassage {
-	Perfect,
-	Good,
-	Bad
-};
-
-struct Vector2 {
-	int x;
-	int y;
+	Perfect = 0,
+	Good = 1,
+	Bad = 2
 };
 
 struct Circle {
 	Vector2 pos;
-	int radius;
+	double radius;
 	int color;
 	bool DestroyFlag;
 };
@@ -33,7 +27,7 @@ const char* massage[] = {
 };
 
 static int Comparison(int totalDistance,int totalRadius);
-static void Draw(int size,double elapsedTime,const Massage* massage,const Box* box,Circle* judgeCircle,Circle* musicalScore);
+static void Draw(int size,double elapsedTime,const Massage* massage,const Box* box,const Circle* judgeCircle,Circle* musicalScore);
 static JudgeMassage Judge(double distance, double radius,Massage* massage);
 static void Display(int se[], const Circle* judgeCircle, JudgeMassage* judge);
 static void Reset(int& count, int& space, bool& play,int size, Circle* musicalScore);
@@ -160,7 +154,7 @@ static int Comparison(int totalDistance, int totalRadius) {
 		totalDistance <= totalRadius ? 1 : 0;
 }
 
-static void Draw(int size,double elapsedTime,const Massage* massage, const Box* box, Circle* judgeCircle, Circle* musicalScore) {
+static void Draw(int size,double elapsedTime,const Massage* massage, const Box* box, const Circle* judgeCircle, Circle* musicalScore) {
 
 	DrawBox(box->pos[0].x, box->pos[0].y, box->pos[1].x, box->pos[1].y, box->color, TRUE);
 

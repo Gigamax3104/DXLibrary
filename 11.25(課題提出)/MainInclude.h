@@ -11,6 +11,8 @@
 const int WHITE = 0xffffff;
 const int RED = 0xff0000;
 const int BLACK = 0x000000;
+const int BLUE = 0x0000ff;
+
 
 enum {
 	TITLE,
@@ -22,6 +24,11 @@ struct Massage {
 	int perfect;
 	int good;
 	int bad;
+};
+
+struct Vector2 {
+	double x;
+	double y;
 };
 
 Massage* Game(int& scene,time_t time);

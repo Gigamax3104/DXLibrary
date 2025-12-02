@@ -12,7 +12,7 @@ struct Circle {
 	int radius;
 };
 
-void CircleDraw(Circle* circle);
+void CircleDraw(const Circle* circle);
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
 	SetWindowText("‰æ–Ê‘JˆÚ");
@@ -41,26 +41,21 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 }
 
-void CircleDraw(Circle* circle) {
-	static int space = 0;
+void CircleDraw(const Circle* circle) {
+	int space = 0;
 	static bool fill = false;
 
 	fill ? DrawString(circle->pos.x - 150, circle->pos.y + circle->radius + 50, "“h‚è‚Â‚Ô‚µ‚ ‚è", WHITE) :
 		DrawString(circle->pos.x - 150, circle->pos.y + circle->radius + 50, "“h‚è‚Â‚Ô‚µ‚È‚µ", WHITE);
 	DrawCircle(circle->pos.x, circle->pos.y, circle->radius, RED, FALSE);
 
-	CheckHitKey(KEY_INPUT_SPACE) ? space++ :
-	space > 0 ? space = -1 : space = 0;
+	int nowspace = CheckHitKey(KEY_INPUT_SPACE);
 
-	if (space == 1) {
+	if (space == 0 && nowspace == 1) {
 		fill ? fill = false : fill = true;
 	}
 
-	if (fill) {
+	space = nowspace;
 
-		DrawCircle(circle->pos.x, circle->pos.y, circle->radius, RED, TRUE);
-	}
-	else{
-		DrawCircle(circle->pos.x, circle->pos.y, circle->radius, RED, FALSE);
-	}
+	DrawCircle(circle->pos.x, circle->pos.y, circle->radius, RED, fill);
 }

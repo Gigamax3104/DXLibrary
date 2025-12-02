@@ -61,11 +61,11 @@ Massage* Game(int& scene,time_t nowtime) {
 
 	static int count = 0;
 	static int space = 0;
-	static Massage judgemassage = { 0,0,0 };
+	static Massage judgeMassage = { 0,0,0 };
 	if (reset) {
-		judgemassage.perfect = 0;
-		judgemassage.good = 0;
-		judgemassage.bad = 0;
+		judgeMassage.perfect = 0;
+		judgeMassage.good = 0;
+		judgeMassage.bad = 0;
 		reset = false;
 	}
 
@@ -115,7 +115,7 @@ Massage* Game(int& scene,time_t nowtime) {
 
 	DrawFormatString(0, 0, WHITE, "%dfps", FPS);
 
-	Draw(size,elapsedTime,&judgemassage,&box, &judgeCircle, musicalScore);
+	Draw(size,elapsedTime,&judgeMassage,&box, &judgeCircle, musicalScore);
 
 	CheckHitKey(KEY_INPUT_SPACE) == 1 ? space++ : space > 0 ? space = -1 : space = 0;
 
@@ -126,7 +126,7 @@ Massage* Game(int& scene,time_t nowtime) {
 	for (int i = 0; i < size2; i++) {
 		if (musicalScore[i].DestroyFlag) {
 			if (space == 1 && Comparison(d[i], judgeCircle.radius + musicalScore[i].radius)) {
-				JudgeMassage judge = Judge(d[i], judgeCircle.radius + musicalScore[i].radius, &judgemassage);
+				JudgeMassage judge = Judge(d[i], judgeCircle.radius + musicalScore[i].radius, &judgeMassage);
 				Display(se, &judgeCircle, &judge);
 				musicalScore[i].DestroyFlag = false;
 				count++;
@@ -134,7 +134,7 @@ Massage* Game(int& scene,time_t nowtime) {
 
 			if (musicalScore[i].pos.x <= -50) {
 				JudgeMassage judge = Bad;
-				judgemassage.bad++;
+				judgeMassage.bad++;
 				Display(se, &judgeCircle, &judge);
 				musicalScore[i].DestroyFlag = false;
 				count++;
@@ -151,7 +151,7 @@ Massage* Game(int& scene,time_t nowtime) {
 	}
 
 	if (returnBool) {
-		return &judgemassage;
+		return &judgeMassage;
 	}
 }
 

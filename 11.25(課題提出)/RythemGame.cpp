@@ -128,7 +128,7 @@ Massage* Game(int& scene,time_t nowtime) {
 				count++;
 			}
 
-			if (musicalScore[i].pos.x <= -50) {
+			if (musicalScore[i].pos.x <= -musicalScore->radius) {
 				JudgeMassage judge = Bad;
 				judgeMassage.bad++;
 				Display(se, &judgeCircle, &judge);

@@ -50,6 +50,7 @@ Massage* Game(int& scene,time_t nowtime) {
 
 	static bool play = true;
 	static bool reset = false;
+	bool returnBool = false;
 
 	static time_t fixedTime = time(NULL);
 	if (reset) {
@@ -143,12 +144,15 @@ Massage* Game(int& scene,time_t nowtime) {
 
 	if (count == MAX) {
 		reset = true;
-		StopSoundMem(bgm);
+		//StopSoundMem(bgm);
 		Reset(count, space, play,size, musicalScore);
-		scene = RESULT;
-		return &judgemassage;
+		//scene = RESULT;
+		//return &judgemassage;
 	}
 
+	if (returnBool) {
+		return &judgemassage;
+	}
 }
 
 static int Comparison(int totalDistance, int totalRadius) {

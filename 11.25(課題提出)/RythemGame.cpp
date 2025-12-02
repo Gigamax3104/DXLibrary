@@ -167,7 +167,7 @@ static void Draw(int size,double elapsedTime,const Massage* massage, const Box* 
 	DrawCircle(judgeCircle->pos.x, judgeCircle->pos.y, judgeCircle->radius, judgeCircle->color, TRUE);
 
 	for (int i = 0; i < size; i++) {
-		if (elapsedTime >= (i + 1) * 2.17 * 60 / BPM && musicalScore[i].DestroyFlag) {
+		if (elapsedTime >= (double)(i + 1) * 60 / BPM && musicalScore[i].DestroyFlag) {
 			musicalScore[i].pos.x -= SPEED;
 			DrawCircle(musicalScore[i].pos.x, musicalScore[i].pos.y,
 					   musicalScore[i].radius, musicalScore[i].color, TRUE);

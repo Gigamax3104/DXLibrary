@@ -111,13 +111,11 @@ Massage* Game(int& scene,time_t nowtime) {
 
 	Draw(/*size,*/elapsedTime,&judgeMassage,&box, &judgeCircle, &musicalScore);
 
-	int nowspace = CheckHitKey(KEY_INPUT_SPACE);
+	CheckHitKey(KEY_INPUT_SPACE) ? space++ : space > 0 ? space = -1 : space = 0;
 
-	if (space == 0 && nowspace >= 1) {
+	if (space >= 1) {
 		DrawCircle(judgeCircle.pos.x, judgeCircle.pos.y, judgeCircle.radius, RED, TRUE);
 	}
-
-	space = nowspace;
 
 	//for (int i = 0; i < size2; i++) {
 	//	if (musicalScore[i].DestroyFlag) {

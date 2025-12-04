@@ -1,6 +1,6 @@
 #include	"MainInclude.h"
+#include	"ErrorCheck.h"
 #include	<math.h>
-#include	<time.h>
 
 enum JudgeMassage {
 	Perfect = 0,
@@ -10,7 +10,7 @@ enum JudgeMassage {
 
 struct Circle {
 	Vector2 pos;
-	double radius;
+	int radius;
 	int color;
 	bool DestroyFlag;
 };
@@ -26,25 +26,17 @@ const char* massage[] = {
 	"Bad..."
 };
 
-static bool Comparison(int totalDistance,int totalRadius);
-static void Draw(/*int size,*/double elapsedTime,const Massage* massage,const Box* box,const Circle* judgeCircle,Circle* musicalScore);
+static bool Comparison(double totalDistance,int totalRadius);
+static void Draw(int size,double elapsedTime,const Massage* MASSAGE,const Box* BOX,const Circle* JUDGECIRCLE,Circle* musicalScore);
 static JudgeMassage Judge(double distance, double radius,Massage* massage);
-static void Display(int se[], const Circle* judgeCircle, JudgeMassage* judge);
-static void Reset(int& count, int& space, bool& play,/*int size,*/ Circle* musicalScore);
+static void Display(const int* SE,Circle* judgeCircle, JudgeMassage* judge);
+static void Reset(int* count, int* space, bool* play,int size, Circle* musicalScore);
 
-Massage* Game(int& scene,time_t nowtime) {
-	static int se[] = {
-		LoadSoundMem("sound/和太鼓でドン.mp3"),
-		LoadSoundMem("sound/小鼓（こつづみ）.mp3"),
-		LoadSoundMem("sound/間抜け4.mp3")
-	};
-
-	static int bgm = LoadSoundMem("sound/Euphoria_Walk.mp3");
-	ChangeVolumeSoundMem(150, bgm);
+Massage* Game(int* scene,const int* BGM,const int* SE,time_t nowtime) {
+	ChangeVolumeSoundMem(150, BGM[2]);
 
 	static bool play = true;
 	static bool reset = false;
-	bool returnBool = false;
 
 	static time_t fixedTime = time(NULL);
 	if (reset) {
@@ -65,112 +57,110 @@ Massage* Game(int& scene,time_t nowtime) {
 
 	static Box box = { 10,HEIGHT - 100,WIDTH / 2 - 50,HEIGHT - 10,WHITE };
 
-	static Circle judgeCircle = { WIDTH / 2,HEIGHT / 2,50,WHITE};
+	Circle judgeCircle = { WIDTH / 2,HEIGHT / 2,50,WHITE};
 
-	static Circle musicalScore/*[MAX]*/ = {
+	static Circle musicalScore[MAX] = {
 		WIDTH + 50,HEIGHT / 2,50,RED,true,
-		//WIDTH + 50,HEIGHT / 2,50,RED,true,
-		//WIDTH + 50,HEIGHT / 2,50,RED,true,
-		//WIDTH + 50,HEIGHT / 2,50,RED,true,
-		//WIDTH + 50,HEIGHT / 2,50,RED,true,
-		//WIDTH + 50,HEIGHT / 2,50,RED,true,
-		//WIDTH + 50,HEIGHT / 2,50,RED,true,
-		//WIDTH + 50,HEIGHT / 2,50,RED,true,
-		//WIDTH + 50,HEIGHT / 2,50,RED,true,
-		//WIDTH + 50,HEIGHT / 2,50,RED,true,
-		//WIDTH + 50,HEIGHT / 2,50,RED,true,
-		//WIDTH + 50,HEIGHT / 2,50,RED,true,
-		//WIDTH + 50,HEIGHT / 2,50,RED,true,
-		//WIDTH + 50,HEIGHT / 2,50,RED,true,
-		//WIDTH + 50,HEIGHT / 2,50,RED,true,
-		//WIDTH + 50,HEIGHT / 2,50,RED,true,
-		//WIDTH + 50,HEIGHT / 2,50,RED,true,
-		//WIDTH + 50,HEIGHT / 2,50,RED,true,
-		//WIDTH + 50,HEIGHT / 2,50,RED,true,
-		//WIDTH + 50,HEIGHT / 2,50,RED,true
+		WIDTH + 50,HEIGHT / 2,50,RED,true,
+		WIDTH + 50,HEIGHT / 2,50,RED,true,
+		WIDTH + 50,HEIGHT / 2,50,RED,true,
+		WIDTH + 50,HEIGHT / 2,50,RED,true,
+		WIDTH + 50,HEIGHT / 2,50,RED,true,
+		WIDTH + 50,HEIGHT / 2,50,RED,true,
+		WIDTH + 50,HEIGHT / 2,50,RED,true,
+		WIDTH + 50,HEIGHT / 2,50,RED,true,
+		WIDTH + 50,HEIGHT / 2,50,RED,true,
+		WIDTH + 50,HEIGHT / 2,50,RED,true,
+		WIDTH + 50,HEIGHT / 2,50,RED,true,
+		WIDTH + 50,HEIGHT / 2,50,RED,true,
+		WIDTH + 50,HEIGHT / 2,50,RED,true,
+		WIDTH + 50,HEIGHT / 2,50,RED,true,
+		WIDTH + 50,HEIGHT / 2,50,RED,true,
+		WIDTH + 50,HEIGHT / 2,50,RED,true,
+		WIDTH + 50,HEIGHT / 2,50,RED,true,
+		WIDTH + 50,HEIGHT / 2,50,RED,true,
+		WIDTH + 50,HEIGHT / 2,50,RED,true
 	};
 
-	//int size = sizeof musicalScore / sizeof musicalScore[0];
+	int size = sizeof musicalScore / sizeof musicalScore[0];
 
-	int d/*[MAX]*/ = { 0 };
-	//int size2 = sizeof d / sizeof d[0];
+	double d[MAX] = { 0 };
+	int size2 = sizeof d / sizeof d[0];
 
-	//for (int i = 0; i < size2; i++) {
-		d/*[i]*/ = sqrt(pow(judgeCircle.pos.x - musicalScore/*[i]*/.pos.x, 2)
-			 + pow(judgeCircle.pos.y - musicalScore/*[i]*/.pos.y, 2));
-	//}
+	for (int i = 0; i < size2; i++) {
+		d[i] = sqrt(pow(judgeCircle.pos.x - musicalScore[i].pos.x, 2)
+			 + pow(judgeCircle.pos.y - musicalScore[i].pos.y, 2));
+	}
 
-	ClearDrawScreen();
-
-	if (play && elapsedTime >= sqrt(pow(judgeCircle.pos.x - musicalScore/*->*/.pos.x, 2)) / (SPEED * FPS)) {		
-		PlaySoundMem(bgm, DX_PLAYTYPE_LOOP);
+	if (play && elapsedTime >= sqrt(pow(judgeCircle.pos.x - musicalScore->pos.x, 2)) / (SPEED * FPS)) {		
+		PlaySoundMem(BGM[2], DX_PLAYTYPE_LOOP);
 		play = false;
 	}
 
-	DrawFormatString(0, 0, WHITE, "%dfps", FPS);
+	//if (CheckHitKey(KEY_INPUT_RETURN)) {
+	//}　Enterキーを押すとメニュー画面へ移動するが、処理が未完成のためコメントアウト。
 
-	Draw(/*size,*/elapsedTime,&judgeMassage,&box, &judgeCircle, &musicalScore);
+	Draw(size,elapsedTime,&judgeMassage,&box, &judgeCircle, musicalScore);
 
 	CheckHitKey(KEY_INPUT_SPACE) ? space++ : space > 0 ? space = -1 : space = 0;
 
 	if (space >= 1) {
-		DrawCircle(judgeCircle.pos.x, judgeCircle.pos.y, judgeCircle.radius, RED, TRUE);
+		DrawCircle(judgeCircle.pos.x, judgeCircle.pos.y, judgeCircle.radius, LIGHTRED, TRUE);
 	}
 
-	//for (int i = 0; i < size2; i++) {
-	//	if (musicalScore[i].DestroyFlag) {
-			if (space == 1 && Comparison(d/*[i]*/, judgeCircle.radius + musicalScore/*[i]*/.radius)) {
-				JudgeMassage judge = Judge(d/*[i]*/, judgeCircle.radius + musicalScore/*[i]*/.radius, &judgeMassage);
-				Display(se, &judgeCircle, &judge);
-				musicalScore/*[i]*/.DestroyFlag = false;
+	for (int i = 0; i < size2; i++) {
+		if (musicalScore[i].DestroyFlag) {
+			if (space == 1 && Comparison(d[i], judgeCircle.radius + musicalScore[i].radius)) {
+				JudgeMassage judge = Judge(d[i], judgeCircle.radius + musicalScore[i].radius, &judgeMassage);
+				Display(SE, &judgeCircle, &judge);
+				musicalScore[i].DestroyFlag = false;
 				count++;
 			}
 
-			if (musicalScore/*[i]*/.pos.x <= -musicalScore/*->*/.radius) {
+			if (musicalScore[i].pos.x <= -musicalScore->radius) {
 				JudgeMassage judge = Bad;
 				judgeMassage.bad++;
-				Display(se, &judgeCircle, &judge);
-				musicalScore/*[i]*/.DestroyFlag = false;
+				Display(SE, &judgeCircle, &judge);
+				musicalScore[i].DestroyFlag = false;
 				count++;
 			}
-	//	}
-	//}
-
-	if (count == /*MAX*/1) {
-		reset = true;
-		//StopSoundMem(bgm);
-		Reset(count, space, play,/*size,*/ &musicalScore);
-		//scene = RESULT;
-		//return &judgemassage;
+		}
 	}
 
-	if (returnBool) {
+	if (count == MAX) {
+		reset = true;
+		StopSoundMem(BGM[2]);
+		Reset(&count, &space, &play,size, musicalScore);
+		*scene = RESULT;
+		return &judgeMassage;
+	}
+	else {
 		return &judgeMassage;
 	}
 }
 
-static bool Comparison(int totalDistance, int totalRadius) {
+static bool Comparison(double totalDistance, int totalRadius) {
 	return
 		totalDistance <= totalRadius ? true : false;
 }
 
-static void Draw(/*int size,*/double elapsedTime,const Massage* massage, const Box* box, const Circle* judgeCircle, Circle* musicalScore) {
+static void Draw(int size,double elapsedTime,const Massage* MASSAGE, const Box* BOX,const Circle* JUDGECIRCLE, Circle* musicalScore) {
 
-	DrawBox(box->pos[0].x, box->pos[0].y, box->pos[1].x, box->pos[1].y, box->color, TRUE);
+	DrawBox(BOX->pos[0].x, BOX->pos[0].y, BOX->pos[1].x, BOX->pos[1].y, BOX->color, TRUE);
 
 	SetFontSize(30);
-	DrawFormatString(box->pos[0].x + 35, box->pos[0].y + 30, BLACK, "Perfect: %d Good: %d Bad: %d",
-		massage->perfect,massage->good, massage->bad);
+	DrawFormatString(BOX->pos[0].x + 35, BOX->pos[0].y + 30, BLACK, "Perfect: %d Good: %d Bad: %d",
+		MASSAGE->perfect, MASSAGE->good, MASSAGE->bad);
 
-	DrawCircle(judgeCircle->pos.x, judgeCircle->pos.y, judgeCircle->radius, judgeCircle->color, TRUE);
+	DrawCircle(JUDGECIRCLE->pos.x, JUDGECIRCLE->pos.y, JUDGECIRCLE->radius, JUDGECIRCLE->color, TRUE);
 
-	//for (int i = 0; i < size; i++) {
-		if (elapsedTime >= (double)(/*i +*/ 1) * 60 / BPM && musicalScore/*[i].*/->DestroyFlag) {
-			musicalScore/*[i].*/->pos.x -= SPEED;
-			DrawCircle(musicalScore/*[i].*/->pos.x, musicalScore/*[i].*/->pos.y,
-					   musicalScore/*[i].*/->radius, musicalScore/*[i].*/->color, TRUE);
+	for (int i = 0; i < size; i++) {
+		if (elapsedTime >= (i + 1) * 2.17 * 60 / BPM && musicalScore[i].DestroyFlag) {
+			musicalScore[i].pos.x -= SPEED;
+			DrawCircle(musicalScore[i].pos.x, musicalScore[i].pos.y,
+					   musicalScore[i].radius, musicalScore[i].color, TRUE);
 		}
-	//}
+	}
 }
 
 static JudgeMassage Judge(double distance, double radius,Massage* massage) {
@@ -188,7 +178,7 @@ static JudgeMassage Judge(double distance, double radius,Massage* massage) {
 		return Perfect;
 	}
 }
-static void Display(int se[], const Circle* judgeCircle, JudgeMassage* judge) {
+static void Display(const int* SE,Circle* judgeCircle, JudgeMassage* judge) {
 	const int color[] = {
 		RED,WHITE,BLUE
 	};
@@ -202,19 +192,19 @@ static void Display(int se[], const Circle* judgeCircle, JudgeMassage* judge) {
 	SetFontSize(30);
 	DrawFormatString(pos[*judge].x, pos[*judge].y, color[*judge], "%s", massage[*judge]);
 	DrawCircle(judgeCircle->pos.x, judgeCircle->pos.y, judgeCircle->radius, RED, TRUE);
-	ChangeVolumeSoundMem(256,se[*judge]);
-	PlaySoundMem(se[*judge], DX_PLAYTYPE_BACK);
+	ChangeVolumeSoundMem(256, SE[*judge]);
+	PlaySoundMem(SE[*judge], DX_PLAYTYPE_BACK);
 }
 
-static void Reset(int& count, int& space, bool& play,/*int size,*/ Circle* musicalScore) {
-	count = 0;
-	space = 0;
-	play = true;
+static void Reset(int* count, int* space, bool* play,int size, Circle* musicalScore) {
+	*count = 0;
+	*space = 0;
+	*play = true;
 
-	//for (int i = 0; i < size; i++) {
-		musicalScore/*[i].*/->pos.x = WIDTH + 50;
-		musicalScore/*[i].*/->pos.y = HEIGHT / 2;
-		musicalScore/*[i].*/->radius = 50;
-		musicalScore/*[i].*/->DestroyFlag = true;
-	//}
+	for (int i = 0; i < size; i++) {
+		musicalScore[i].pos.x = WIDTH + 50;
+		musicalScore[i].pos.y = HEIGHT / 2;
+		musicalScore[i].radius = 50;
+		musicalScore[i].DestroyFlag = true;
+	}
 }

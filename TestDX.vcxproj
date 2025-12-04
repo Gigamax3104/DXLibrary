@@ -19,9 +19,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="11.25(課題提出)\ErrorCheck.h" />
     <ClInclude Include="11.25(課題提出)\MainInclude.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="11.25(課題提出)\ErrorCheck.cpp" />
+    <ClCompile Include="11.25(課題提出)\Menu.cpp" />
     <ClCompile Include="11.25(課題提出)\RythemGame.cpp" />
     <ClCompile Include="11.25(課題提出)\Titlecpp.cpp" />
   </ItemGroup>

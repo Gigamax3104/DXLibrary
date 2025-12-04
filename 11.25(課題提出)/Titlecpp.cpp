@@ -64,7 +64,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		}
 
 		ScreenFlip();
-		WaitTimer(WAITTIMER);
+		WaitTimer(WAIT);
 		if (ProcessMessage() == -1) break;
 		if (CheckHitKey(KEY_INPUT_ESCAPE) == 1) break;
 	}

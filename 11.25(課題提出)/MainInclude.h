@@ -1,7 +1,8 @@
 #pragma once
-#define WAITTIMER 33
-#define FPS 1000 / WAITTIMER
+#define WAIT 33
+#define FPS 1000 / WAIT
 #define BPM 130
+#define MINUTE 60
 #define SPEED 10
 #define MAX 20
 #define WIDTH 1080

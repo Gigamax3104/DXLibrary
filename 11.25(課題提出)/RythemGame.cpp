@@ -20,7 +20,7 @@ struct Box {
 	int color;
 };
 
-const char* massage[] = {
+const char* MASSAGE[] = {
 	"Perfect!!",
 	"Good",
 	"Bad..."
@@ -37,6 +37,7 @@ Massage* Game(int* scene,const int* BGM,const int* SE,time_t nowtime) {
 
 	static bool play = true;
 	static bool reset = false;
+	static bool menuReset = false;
 
 	static time_t fixedTime = time(NULL);
 	if (reset) {
@@ -98,9 +99,10 @@ Massage* Game(int* scene,const int* BGM,const int* SE,time_t nowtime) {
 	}
 
 	//if (CheckHitKey(KEY_INPUT_RETURN)) {
-	//}　Enterキーを押すとメニュー画面へ移動するが、処理が未完成のためコメントアウト。
+	//	menuReset = Menu(scene, &fixedTime);
+	//}
 
-	Draw(size,elapsedTime,&judgeMassage,&box, &judgeCircle, musicalScore);
+	Draw(size,elapsedTime,&judgeMassage, &box, &judgeCircle, musicalScore);
 
 	CheckHitKey(KEY_INPUT_SPACE) ? space++ : space > 0 ? space = -1 : space = 0;
 
@@ -127,7 +129,7 @@ Massage* Game(int* scene,const int* BGM,const int* SE,time_t nowtime) {
 		}
 	}
 
-	if (count == MAX) {
+	if (count == MAX || menuReset) {
 		reset = true;
 		StopSoundMem(BGM[2]);
 		Reset(&count, &space, &play,size, musicalScore);
@@ -190,7 +192,7 @@ static void Display(const int* SE,Circle* judgeCircle, JudgeMassage* judge) {
 	};
 
 	SetFontSize(30);
-	DrawFormatString(pos[*judge].x, pos[*judge].y, color[*judge], "%s", massage[*judge]);
+	DrawFormatString(pos[*judge].x, pos[*judge].y, color[*judge], "%s", MASSAGE[*judge]);
 	DrawCircle(judgeCircle->pos.x, judgeCircle->pos.y, judgeCircle->radius, RED, TRUE);
 	ChangeVolumeSoundMem(256, SE[*judge]);
 	PlaySoundMem(SE[*judge], DX_PLAYTYPE_BACK);

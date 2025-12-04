@@ -36,3 +36,4 @@ struct Vector2 {
 };
 
 Massage* Game(int* scene, const int* BGM, const int* SE, time_t time);
+bool Menu(int* scene, time_t* fixedTime);
